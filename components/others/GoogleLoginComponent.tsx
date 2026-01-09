@@ -28,10 +28,12 @@ function GoogleLoginComponent() {
     }
   };
   return (
-    <GoogleLogin
-      onSuccess={handleSuccess}
-      onError={() => toast.error("Something went wrong in error ")}
-    ></GoogleLogin>
+    <div className="my-3">
+      <GoogleLogin
+        onSuccess={handleSuccess}
+        onError={() => toast.error("Something went wrong in error ")}
+      ></GoogleLogin>
+    </div>
   );
 }
 

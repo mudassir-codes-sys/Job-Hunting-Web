@@ -95,7 +95,7 @@ export default function VerifyPage() {
   };
 
   return (
-    <div className="relative w-full h-screen bg-black">
+    <div className="relative w-full h-screen  flex justify-center items-center bg-black">
       <LetterGlitch
         glitchSpeed={50}
         centerVignette={true}
@@ -104,43 +104,48 @@ export default function VerifyPage() {
         glitchColors={["#2b4539", "#61dca3", "#61b3dc"]}
         characters="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%$^@&@!*#%*%*^$($($"
       />
-      <div className="absolute inset-0 bg-black opacity-85"></div>
 
-      <div className="absolute left-1/2 top-1/2 bg-gray-800 rounded p-14 justify-center -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-4">
-        <h1 className="text-white text-2xl font-bold">Verify your account</h1>
-        <p className="text-white">
-          We have sent an email to {maskEmail(email)}
-        </p>
+      <div className="absolute  flex p-4 justify-center items-center border border-white  w-full h-screen">
+        <div className="w-full max-w-xl flex items-center justify-center">
+          <div className="bg-gray-800  w-full rounded sm:p-14 py-6 justify-center items-center flex flex-col gap-4">
+            <h1 className="text-white text-2xl font-bold">
+              Verify your account
+            </h1>
+            <p className="text-white">
+              We have sent an email to {maskEmail(email)}
+            </p>
 
-        <div className="flex gap-2 mt-4">
-          {otp.map((digit, i) => (
-            <input
-              key={i}
-              type="text"
-              inputMode="numeric"
-              pattern="\d*"
-              maxLength={1}
-              value={digit}
-              onChange={(e) => handleChange(e, i)}
-              onKeyDown={(e) => handleKeyDown(e, i)}
-              onPaste={handlePaste}
-              ref={(el) => void (inputRefs.current[i] = el)}
-              className="w-12 h-12 text-center text-white font-bold rounded border focus:outline-none"
-            />
-          ))}
+            <div className="flex gap-2 mt-4">
+              {otp.map((digit, i) => (
+                <input
+                  key={i}
+                  type="text"
+                  inputMode="numeric"
+                  pattern="\d*"
+                  maxLength={1}
+                  value={digit}
+                  onChange={(e) => handleChange(e, i)}
+                  onKeyDown={(e) => handleKeyDown(e, i)}
+                  onPaste={handlePaste}
+                  ref={(el) => void (inputRefs.current[i] = el)}
+                  className=" w-10 h-10 sm:w-12 sm:h-12  text-center text-white font-bold rounded border focus:outline-none"
+                />
+              ))}
+            </div>
+            <Button
+              onClick={() => {
+                if (otp.some((d) => d === ""))
+                  return toast.error("Please fill all OTP digits");
+                handleVerify(email, otp.join(""));
+              }}
+              disabled={loading}
+              variant={"outline"}
+              className="mt-2 px-5 cursor-pointer"
+            >
+              {loading ? "Verifying" : "Verify"}
+            </Button>
+          </div>
         </div>
-        <Button
-          onClick={() => {
-            if (otp.some((d) => d === ""))
-              return toast.error("Please fill all OTP digits");
-            handleVerify(email, otp.join(""));
-          }}
-          disabled={loading}
-          variant={"outline"}
-          className="mt-2 px-5 cursor-pointer"
-        >
-          {loading ? "Verifying" : "Verify"}
-        </Button>
       </div>
     </div>
   );
