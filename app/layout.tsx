@@ -26,16 +26,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <GlobalContextProvider>
-        <GoogleOAuthProvider clientId={process.env.GOOGLE_CLIENT_ID!}>
-          <Toaster richColors position="top-right" />
-          <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <GlobalContextProvider>
+          <GoogleOAuthProvider
+            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
           >
+            <Toaster richColors position="top-right" />
             {children}
-          </body>
-        </GoogleOAuthProvider>
-      </GlobalContextProvider>
+          </GoogleOAuthProvider>
+        </GlobalContextProvider>
+      </body>
     </html>
   );
 }
