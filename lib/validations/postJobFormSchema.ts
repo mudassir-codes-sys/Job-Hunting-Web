@@ -1,0 +1,60 @@
+import { z } from "zod";
+type JobType = "Full Time" | "Part Time" | "Contract" | "Internship";
+type experienceRequired = "Yes" | "No";
+
+export interface JobForm {
+  companyName: string;
+  companyLogo: File;
+  jobTitle: string;
+  description: string;
+  type: JobType;
+  location: string;
+  requiredSkills: string[];
+  educationRequired: string;
+  experienceRequired: experienceRequired;
+  minExperienceRequired?: number;
+  deadline: Date;
+  link: string;
+  resume: experienceRequired;
+  coverLetter: experienceRequired;
+}
+
+export const jobFormValidation = z.object({
+  companyName: z.string().min(2, "Company name is required"),
+
+  companyLogo: z.file({ error: "Company logo is required" }).nullable(),
+
+  jobTitle: z.string({ error: "Title is required" }),
+
+  description: z.string().min(20, "Description must be at least 20 characters"),
+
+  type: z.enum(["Full Time", "Part Time", "Contract", "Internship"], {
+    error: "Job Type is required",
+  }),
+
+  location: z.string({ error: "Location is required" }),
+
+  requiredSkills: z
+    .array(z.string().min(2, "Skill cannot be empty"))
+    .min(1, "At least 1 skill is required"),
+
+  educationRequired: z
+    .string()
+    .min(2, "Required education field must be provided"),
+
+  experienceRequired: z.enum(["Yes", "No"], {
+    error: "Experience field must be provided",
+  }),
+
+  yearsOfExperienceRequired: z.number().optional(),
+
+  deadline: z
+    .date()
+    .refine((date) => date > new Date(), "Deadline must be in the future"),
+
+  link: z.string({ error: "Url must be provided" }),
+
+  resume: z.enum(["Yes", "No"]),
+
+  coverLetter: z.enum(["Yes", "No"]),
+});
