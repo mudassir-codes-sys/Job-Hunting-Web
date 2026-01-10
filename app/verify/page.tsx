@@ -1,6 +1,6 @@
 import VerifyPage from "@/components/others/VerifyPageComp";
 
-function page() {
+async function page() {
   return <VerifyPage />;
 }
 
