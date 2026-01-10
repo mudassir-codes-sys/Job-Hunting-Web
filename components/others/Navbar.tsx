@@ -4,18 +4,19 @@ import { Button } from "../ui/button";
 function Navbar() {
   return (
     <>
-      <nav className="text-white flex gap-4">
+      <nav className="text-white sm:flex gap-4 hidden ">
         <Link href="/">HOME</Link>
         <Link href="/">HOME</Link>
         <Link href="/">HOME</Link>
         <Link href="/">HOME</Link>
       </nav>
 
-      <div className="flex items-center gap-2">
-        <Button className="bg-[#4FC3F7] hover:bg-[#82DFFF] cursor-pointer px-6">
+      <div className="hidden sm:flex items-center gap-4 ">
+        <Button className="bg-[#4FC3F7] hover:bg-[#82DFFF] cursor-pointer px-5 ">
           Login
         </Button>
         <svg
+          className=""
           xmlns="http://www.w3.org/2000/svg"
           width="34"
           height="34"

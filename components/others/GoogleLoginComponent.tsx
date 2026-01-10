@@ -30,6 +30,7 @@ function GoogleLoginComponent() {
   return (
     <div className="my-3">
       <GoogleLogin
+      shape="pill"
         onSuccess={handleSuccess}
         onError={() => toast.error("Something went wrong in error ")}
       ></GoogleLogin>

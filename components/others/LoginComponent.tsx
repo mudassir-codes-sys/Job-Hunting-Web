@@ -123,7 +123,7 @@ function LoginComponent() {
               />
               <GoogleLoginComponent />
               <Button
-                className="bg-black relative  text-white px-6 py-2 rounded flex items-center  gap-2 hover:bg-gray-950/50 cursor-pointer"
+                className="bg-black relative text-white px-6 py-2 rounded-l-3xl rounded-r-3xl flex items-center  gap-2 hover:bg-gray-950/50 cursor-pointer"
                 onClick={(e) => {
                   e.preventDefault();
                   window.location.href =
@@ -133,7 +133,7 @@ function LoginComponent() {
                     "&scope=user:email";
                 }}
               >
-                <FaGithub className="absolute left-4  " />
+                <FaGithub className="absolute left-4" size="20" />
                 Login with GitHub
               </Button>
               <p className="text-sm mt-2">

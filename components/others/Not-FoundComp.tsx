@@ -12,7 +12,7 @@ function NotFoundComp() {
           />
         </div>
         <div className="fixed bg-black opacity-60 inset-0 "></div>
-        <div className="absolute text-white w-1/2 h-screen flex flex-col justify-center max-w-lg gap-5 ml-14   leading-relaxed ">
+        <div className="absolute text-white w-1/2 h-screen flex flex-col justify-center max-w-lg gap-5 ml-14 leading-relaxed ">
           <h1 className="text-5xl leading-14  font-bold">
             Not all those who wonder are lost.
           </h1>
