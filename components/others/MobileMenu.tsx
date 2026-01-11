@@ -19,7 +19,7 @@ export default function Example() {
               href="#"
               className="block px-4 py-2 text-sm text-white data-focus:bg-white/5 data-focus:text-white data-focus:outline-hidden"
             >
-              Account settings
+              Home
             </Link>
           </MenuItem>
           <MenuItem>
@@ -32,10 +32,10 @@ export default function Example() {
           </MenuItem>
           <MenuItem>
             <Link
-              href="#"
+              href="/post-job"
               className="block px-4 py-2 text-sm text-white data-focus:bg-white/5 data-focus:text-white data-focus:outline-hidden"
             >
-              License
+              Post Job
             </Link>
           </MenuItem>
           <form action="#" method="POST">

@@ -1,22 +1,20 @@
 import { z } from "zod";
 type JobType = "Full Time" | "Part Time" | "Contract" | "Internship";
-type experienceRequired = "Yes" | "No";
 
 export interface JobForm {
+  // Company Info
   companyName: string;
   companyLogo: File;
+  // Job Info
   jobTitle: string;
   description: string;
   type: JobType;
   location: string;
   requiredSkills: string[];
   educationRequired: string;
-  experienceRequired: experienceRequired;
+  experienceRequired: "No";
   minExperienceRequired?: number;
   deadline: Date;
-  link: string;
-  resume: experienceRequired;
-  coverLetter: experienceRequired;
 }
 
 export const jobFormValidation = z.object({
@@ -43,18 +41,12 @@ export const jobFormValidation = z.object({
     .min(2, "Required education field must be provided"),
 
   experienceRequired: z.enum(["Yes", "No"], {
-    error: "Experience field must be provided",
+    error: "Fill the experience required field",
   }),
 
-  yearsOfExperienceRequired: z.number().optional(),
+  minExperienceRequired: z.number().optional(),
 
   deadline: z
     .date()
     .refine((date) => date > new Date(), "Deadline must be in the future"),
-
-  link: z.string({ error: "Url must be provided" }),
-
-  resume: z.enum(["Yes", "No"]),
-
-  coverLetter: z.enum(["Yes", "No"]),
 });

@@ -1,5 +1,6 @@
 "use client";
 import { z } from "zod";
+import post from "../../public/Postjob.json";
 import { jobFormValidation } from "@/lib/validations/postJobFormSchema";
 
 import {
@@ -11,15 +12,39 @@ import {
 } from "../ui/card";
 import { useState } from "react";
 import { Button } from "../ui/button";
+import Lottie from "lottie-react";
+import LiquidChrome from "../ui/liquidbg";
+import { toast } from "sonner";
 
 const labelClass =
-  "flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 ";
+  "flex items-center gap-2 text-sm  leading-none font-semibold select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 max-w-xs text-gray-700 z-10 ";
 
 const inputClass =
-  "text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[1px]   aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive";
+  "text-foreground placeholder:text-gray-600 selection:bg-primary selection:text-primary-foreground dark:bg-input/30 font-semibold border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-sm  transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm  focus:ring-1 focus:ring-gray-400 :ring-offset-1 focus:ring-offset-gray-100 lg:max-w-sm w-full shadow-xs shadow-[#1D353F] z-10";
 
 function PostJobForm() {
-  const [form, setForm] = useState<z.infer<typeof jobFormValidation>>({
+  const [skills, setSkills] = useState("");
+  const [skillsList, setSkillsList] = useState<string[]>([]);
+
+  const handleSkillsKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      const value = skills.trim();
+      if (!value) return;
+      if (skillsList.includes(value)) {
+        toast.error("Already included");
+      } else {
+        setSkillsList((prev) => [...prev, value]);
+        setSkills("");
+      }
+    }
+  };
+
+  const removeSkill = (id: number): void => {
+    setSkillsList((prev) => prev.filter((_, i) => i !== id));
+  };
+
+  const initialState: z.infer<typeof jobFormValidation> = {
     companyName: "",
     companyLogo: null,
     jobTitle: "",
@@ -27,215 +52,267 @@ function PostJobForm() {
     location: "",
     type: "Full Time",
     experienceRequired: "No",
-    yearsOfExperienceRequired: 0,
+    minExperienceRequired: 0,
     educationRequired: "",
     requiredSkills: [],
-    link: "",
     deadline: new Date(),
-    coverLetter: "Yes",
-    resume: "Yes",
-  });
+  };
+  const [form, setForm] =
+    useState<z.infer<typeof jobFormValidation>>(initialState);
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const target = e.target;
+
+    if (target instanceof HTMLInputElement) {
+      if (target.type === "file" && target.files) {
+        setForm((prev) => ({ ...prev, [target.id]: target.files?.[0] }));
+      } else if (target.type === "checkbox") {
+        setForm((prev) => ({ ...prev, [target.id]: target.checked }));
+      } else {
+        setForm((prev) => ({ ...prev, [target.id]: target.value }));
+      }
+    } else if (target instanceof HTMLSelectElement) {
+      setForm((prev) => ({ ...prev, [target.id]: target.value }));
+    }
+  };
+
   return (
-    <Card className="w-full  max-w-lg border-2">
-      <CardHeader className="w-full">
-        <CardTitle className="text-xl font-bold">Post New Job</CardTitle>
-        <CardDescription>Post new job ot get Applicants</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form className="space-y-3 ">
-          <div className="flex  flex-col  gap-2">
-            <label htmlFor="companyName" className={labelClass}>
-              Company Name
-            </label>
-            <input
-              id="companyName"
-              placeholder="Company Name"
-              value={form.companyName}
-              type="text"
-              className={inputClass}
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="companyLogo" className={labelClass}>
-              Company Logo
-            </label>
-            <input id="companyLogo" type="file" className={inputClass} />
-          </div>
+    <div className="w-full flex md:flex-row md:gap-0 gap-4 flex-col h-auto justify-between p-5">
+      <Card className="md:w-1/2 w-full bg-white/90 backdrop-blur-lg h-auto  relative  shadow-lg  rounded-xl border border-gray-200">
+        {/* <div
+          className="inset-0 opacity-8 z-0"
+          style={{ width: "100%", height: "600px", position: "absolute" }}
+        >
+          <Galaxy />
+        </div> */}
+        <div className="absolute inset-0 bg-black opacity-20"></div>
+        <CardHeader className="w-full">
+          <CardTitle className="text-2xl font-bold">Post New Job</CardTitle>
+          <CardDescription>Post new job to get Applicants</CardDescription>
+        </CardHeader>
+        <CardContent className="w-full max-w-4xl mx-auto">
+          <form className="grid grid-cols-1 md:grid-cols-2 lg:gap-x-8 gap-x-14  gap-y-5   w-full">
+            {/* Company Name */}
+            <div className="flex flex-col gap-2">
+              <label htmlFor="companyName" className={labelClass}>
+                Company Name
+              </label>
+              <input
+                onChange={handleChange}
+                id="companyName"
+                placeholder="Company Name"
+                value={form.companyName}
+                type="text"
+                className={inputClass}
+              />
+            </div>
 
-          <div className="flex flex-col gap-2">
-            <label htmlFor="jobTitle" className={labelClass}>
-              Job Title
-            </label>
-            <input
-              id="jobTitle"
-              placeholder="Job Title"
-              value={form.jobTitle}
-              type="text"
-              className={inputClass}
-            />
-          </div>
+            {/* Company Logo */}
+            <div className="flex flex-col gap-2">
+              <label htmlFor="companyLogo" className={labelClass}>
+                Company Logo
+              </label>
+              <input
+                onChange={handleChange}
+                id="companyLogo"
+                type="file"
+                className={inputClass}
+              />
+            </div>
 
-          <div className="flex flex-col gap-2">
-            <label htmlFor="description" className={labelClass}>
-              Job Description
-            </label>
-            <input
-              id="description"
-              placeholder="Job Description"
-              value={form.description}
-              type="text"
-              className={inputClass}
-            />
-          </div>
+            {/* Job Title */}
+            <div className="flex flex-col gap-2">
+              <label htmlFor="jobTitle" className={labelClass}>
+                Job Title
+              </label>
+              <input
+                onChange={handleChange}
+                id="jobTitle"
+                placeholder="Job Title"
+                value={form.jobTitle}
+                type="text"
+                className={inputClass}
+              />
+            </div>
 
-          <div className="flex flex-col gap-2">
-            <label htmlFor="location" className={labelClass}>
-              Location
-            </label>
-            <input
-              id="location"
-              placeholder="Location"
-              value={form.location}
-              type="text"
-              className={inputClass}
-            />
-          </div>
-          <div className="flex gap-2 flex-col">
-            <label htmlFor="type" className={labelClass}>
-              Job Type
-            </label>
-            <select
-              className={` ${inputClass}`}
-              value={form.type}
-              name="type"
-              id="type"
-            >
-              <option value="Full Time">Full Time</option>
-              <option value="Part Time">Part Time</option>
-              <option value="Contract">Contract</option>
-              <option value="Internship">Internship</option>
-            </select>
-          </div>
+            {/* Job Description */}
+            <div className="flex flex-col gap-2">
+              <label htmlFor="description" className={labelClass}>
+                Job Description
+              </label>
+              <input
+                onChange={handleChange}
+                id="description"
+                placeholder="Job Description"
+                value={form.description}
+                type="text"
+                className={inputClass}
+              />
+            </div>
 
-          <div className="flex gap-2 flex-col">
-            <label htmlFor="experienceRequired" className={labelClass}>
-              Experience Required
-            </label>
-            <select
-              className={` ${inputClass}`}
-              value={form.experienceRequired}
-              name="type"
-              id="experienceRequired"
-            >
-              <option value="No">No</option>
-              <option value="Yes">Yes</option>
-            </select>
-          </div>
+            {/* Location */}
+            <div className="flex flex-col gap-2">
+              <label htmlFor="location" className={labelClass}>
+                Location
+              </label>
+              <input
+                onChange={handleChange}
+                id="location"
+                placeholder="Location"
+                value={form.location}
+                type="text"
+                className={inputClass}
+              />
+            </div>
 
-          <div className="flex w-full flex-col gap-2">
-            <label htmlFor="yearsOfExperienceRequired">
-              Min experience required in years (optional)
-            </label>
-            <input
-              type="number"
-              value={form.yearsOfExperienceRequired}
-              id="yearsOfExperienceRequired"
-              className={` ${inputClass} `}
-            />
-          </div>
+            {/* Job Type */}
+            <div className="flex flex-col gap-2">
+              <label htmlFor="type" className={labelClass}>
+                Job Type
+              </label>
+              <select
+                onChange={handleChange}
+                className={inputClass}
+                value={form.type}
+                name="type"
+                id="type"
+              >
+                <option value="Full Time">Full Time</option>
+                <option value="Part Time">Part Time</option>
+                <option value="Contract">Contract</option>
+                <option value="Internship">Internship</option>
+              </select>
+            </div>
 
-          <div className="flex flex-col gap-2">
-            <label htmlFor="location" className={labelClass}>
-              Location
-            </label>
-            <input
-              id="location"
-              placeholder="Location"
-              value={form.location}
-              type="text"
-              className={inputClass}
-            />
-          </div>
+            {/* Experience Required */}
+            <div className="flex gap-2 flex-col">
+              <label htmlFor="experienceRequired" className={labelClass}>
+                Experience Required
+              </label>
+              <select
+                onChange={handleChange}
+                className={` ${inputClass}`}
+                name="type"
+                id="experienceRequired"
+              >
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </div>
 
-          <div className="flex flex-col gap-2">
-            <label htmlFor="educationRequired" className={labelClass}>
-              Education Required
-            </label>
-            <input
-              id="educationRequired"
-              placeholder="Education Required e.g.BS in ..."
-              value={form.educationRequired}
-              type="text"
-              className={inputClass}
-            />
-          </div>
+            {/* Min Experience */}
+            <div className="flex flex-col gap-2">
+              <label htmlFor="minExperienceRequired" className={labelClass}>
+                Min experience required in years (optional)
+              </label>
+              <input
+                onChange={handleChange}
+                type="number"
+                value={form.minExperienceRequired}
+                id="minExperienceRequired"
+                className={inputClass}
+              />
+            </div>
 
-          <div className="flex flex-col gap-2">
-            <label htmlFor="requiredSkills" className={labelClass}>
-              Required Skills
-            </label>
-            <input
-              id="requiredSkills"
-              placeholder="Press enter or comma , to add "
-              value={form.requiredSkills}
-              type="text"
-              className={inputClass}
-            />
-          </div>
+            {/* Education Required */}
+            <div className="flex flex-col gap-2">
+              <label htmlFor="educationRequired" className={labelClass}>
+                Education Required
+              </label>
+              <input
+                onChange={handleChange}
+                id="educationRequired"
+                placeholder="Education Required e.g. BS in ..."
+                value={form.educationRequired}
+                type="text"
+                className={inputClass}
+              />
+            </div>
 
-          <div className="flex flex-col gap-2">
-            <label htmlFor="link" className={labelClass}>
-              Link
-            </label>
-            <input
-              id="link"
-              placeholder="Link"
-              value={form.link}
-              type="text"
-              className={inputClass}
-            />
-          </div>
+            {/* Required Skills */}
+            <div className="flex flex-col gap-2">
+              <label htmlFor="requiredSkills" className={labelClass}>
+                Required Skills
+              </label>
 
-          <div className="flex flex-col gap-2">
-            <label htmlFor="deadline" className={labelClass}>
-              DeadLine
-            </label>
-            <input id="deadline" type="Date" className={inputClass} />
-          </div>
+              <div id="requiredSkills" className=" flex flex-wrap gap-2">
+                {skillsList.map((skill, i) => (
+                  <div
+                    key={i}
+                    className="bg-[#898a8d] text-black z-5 px-3 py-1 rounded-full flex items-center gap-1"
+                  >
+                    {skill}
+                    <span
+                      className="cursor-pointer text-white font-bold"
+                      onClick={() => removeSkill(i)}
+                    >
+                      &times;
+                    </span>
+                  </div>
+                ))}
+                <input
+                  onKeyDown={handleSkillsKeyDown}
+                  id="skills"
+                  placeholder="Press enter or comma , to add"
+                  value={skills}
+                  onChange={(e) => setSkills(e.target.value)}
+                  type="text"
+                  className={inputClass}
+                />
+              </div>
+              {/* Skills Bullets */}
+            </div>
 
-          <div className="flex gap-2 flex-col">
-            <label htmlFor="experienceRequired" className={labelClass}>
-              Resume required
-            </label>
-            <select
-              className={` ${inputClass}`}
-              value={form.resume}
-              name="resume"
-              id="resume"
-            >
-              <option value="No">No</option>
-              <option value="Yes">Yes</option>
-            </select>
-          </div>
+            {/* Deadline */}
+            <div className="flex flex-col gap-2">
+              <label htmlFor="deadline" className={labelClass}>
+                Deadline
+              </label>
+              <input
+                onChange={handleChange}
+                id="deadline"
+                type="date"
+                className={`${inputClass} flex-1 min-w-30 outline-none bg-transparent `}
+              />
+            </div>
 
-          <div className="flex gap-2 flex-col">
-            <label htmlFor="experienceRequired" className={labelClass}>
-              Cover letter required
-            </label>
-            <select
-              className={` ${inputClass}`}
-              value={form.coverLetter}
-              name="coverLetterF"
-              id="coverLetterF"
-            >
-              <option value="No">No</option>
-              <option value="Yes">Yes</option>
-            </select>
+            {/* ------------------------Premium Post------------------------  */}
+            <div className="flex gap-2 flex-col">
+              <label htmlFor="premiumPost" className={labelClass}>
+                Premium Post (paid)
+              </label>
+              <select
+                className={` ${inputClass}`}
+                name="premiumPost"
+                id="experienceRequired"
+              >
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </div>
+          </form>
+
+          <div className="flex justify-center mt-6">
+            <Button className="px-10 text-lg z-5 cursor-pointer">Post</Button>
           </div>
-          <Button>Submit</Button>
-        </form>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+      <div className="sm:w-1/2 relative flex justify-center  items-center">
+        <div
+          className="absolute inset-0 z-1 opacity-5 "
+          style={{ width: "100%" }}
+        >
+          <LiquidChrome
+            baseColor={[0.0, 0.1, 0.1]}
+            speed={0.1}
+            amplitude={0.5}
+            interactive={true}
+          />
+        </div>
+        <Lottie className="lg:max-w-sm max-w-70 " animationData={post} />
+      </div>
+    </div>
   );
 }
 

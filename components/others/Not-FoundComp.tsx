@@ -18,7 +18,8 @@ function NotFoundComp() {
           </h1>
           <h3 className="text-2xl font-semibold">--J.R.R.Tolkein </h3>
           <p className="text-lg">
-            We could not find the page you were looking for (Error 404)
+            We could not find the page you were looking for{" "}
+            <span className="text-red-600 font-bold text-xl">(Error 404)</span>
           </p>
         </div>
       </div>

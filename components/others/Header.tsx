@@ -3,7 +3,7 @@ import Navbar from "./Navbar";
 import Example from "./MobileMenu";
 function Header() {
   return (
-    <header className="absolute top-0 left-0 px-5  flex items-center  justify-between bg-[#142b33b3]/70 w-full h-20 z-10">
+    <header className="absolute top-0 left-0 px-5 flex items-center  justify-between bg-[#172931]  w-full h-20 z-10">
       <LogoGrid />
       <Navbar />
       <div className="flex sm:hidden gap-5 items-center">

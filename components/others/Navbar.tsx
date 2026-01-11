@@ -5,9 +5,9 @@ function Navbar() {
   return (
     <>
       <nav className="text-white sm:flex gap-4 hidden ">
+        <Link href="/">Home</Link>
         <Link href="/">HOME</Link>
-        <Link href="/">HOME</Link>
-        <Link href="/">HOME</Link>
+        <Link href="/post-job">Post Job</Link>
         <Link href="/">HOME</Link>
       </nav>
 
