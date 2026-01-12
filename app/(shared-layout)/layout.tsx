@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import { Toaster } from "sonner";
-import { GlobalContextProvider } from "./(shared-layout)/context/app-context";
+import { GlobalContextProvider } from "./context/app-context";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import Header from "@/components/others/Header";
 import ClientOnly from "@/components/others/ClientOnly";
 import FetchUser from "@/components/others/fetchUser";
 
@@ -39,6 +40,7 @@ export default function RootLayout({
               clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
             >
               <Toaster richColors position="top-right" />
+              <Header />
 
               {children}
             </GoogleOAuthProvider>

@@ -1,4 +1,4 @@
-import { useGlobalContext } from "@/app/context/app-context";
+import { useGlobalContext } from "@/app/(shared-layout)/context/app-context";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { toast } from "sonner";
 function GoogleLoginComponent() {

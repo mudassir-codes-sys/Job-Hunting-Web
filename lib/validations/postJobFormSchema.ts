@@ -1,20 +1,20 @@
 import { z } from "zod";
 type JobType = "Full Time" | "Part Time" | "Contract" | "Internship";
+export type post = "Yes" | "No";
 
 export interface JobForm {
-  // Company Info
   companyName: string;
-  companyLogo: File;
-  // Job Info
+  companyLogo: File | null;
   jobTitle: string;
   description: string;
   type: JobType;
   location: string;
   requiredSkills: string[];
   educationRequired: string;
-  experienceRequired: "No";
+  experienceRequired: post;
   minExperienceRequired?: number;
   deadline: Date;
+  isPremium: post;
 }
 
 export const jobFormValidation = z.object({
@@ -49,4 +49,5 @@ export const jobFormValidation = z.object({
   deadline: z
     .date()
     .refine((date) => date > new Date(), "Deadline must be in the future"),
+  isPremium: z.enum(["Yes", "No"]),
 });

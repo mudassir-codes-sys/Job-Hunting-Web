@@ -4,18 +4,27 @@ import { setUser } from "@/app/slices/userSlice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
+export const fetchUser = async () => {
+  try {
+    const res = await fetch("/api/user", {
+      credentials: "include",
+    });
+    const data = await res.json();
+
+    return data;
+  } catch (err) {
+    console.error(err);
+  }
+};
 const FetchUser = () => {
   const dispatch = useDispatch();
-  useEffect(() => {
-    const fetchUser = async () => {
-      console.log("function run");
 
+  useEffect(() => {
+    const getUser = async () => {
       try {
-        const res = await fetch("/api/user", {
-          credentials: "include",
-        });
-        const data = await res.json();
-        console.log(data);
+        const data = await fetchUser();
+
+        if (!data?.message) return;
 
         dispatch(
           setUser({
@@ -23,13 +32,14 @@ const FetchUser = () => {
             isPaid: data.message.isPaid,
           })
         );
-      } catch (err) {
-        console.error(err);
+      } catch (error) {
+        console.error("failed to fetch", error);
       }
     };
-    fetchUser();
+    getUser();
   }, [dispatch]);
-  return <div>fetchUser</div>;
+
+  return null;
 };
 
 export default FetchUser;

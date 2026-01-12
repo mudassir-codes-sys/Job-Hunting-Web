@@ -1,5 +1,5 @@
 "use client";
-import { z } from "zod";
+import { z, ZodError } from "zod";
 import post from "../../public/Postjob.json";
 import { jobFormValidation } from "@/lib/validations/postJobFormSchema";
 
@@ -10,11 +10,15 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "../ui/button";
 import Lottie from "lottie-react";
 import LiquidChrome from "../ui/liquidbg";
 import { toast } from "sonner";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import customToast from "./CustomToast";
+import { setLoading } from "@/app/slices/loadingSlice";
 
 const labelClass =
   "flex items-center gap-2 text-sm  leading-none font-semibold select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 max-w-xs text-gray-700 z-10 ";
@@ -25,7 +29,10 @@ const inputClass =
 function PostJobForm() {
   const [skills, setSkills] = useState("");
   const [skillsList, setSkillsList] = useState<string[]>([]);
-
+  const isUserPaid = useSelector((state: RootState) => state.user.isPaid);
+  const loading = useSelector((state: RootState) => state.loading.loading);
+  const dispatch = useDispatch();
+  const logoRef = useRef<HTMLInputElement | null>(null);
   const handleSkillsKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
@@ -56,11 +63,14 @@ function PostJobForm() {
     educationRequired: "",
     requiredSkills: [],
     deadline: new Date(),
+    isPremium: "No",
   };
   const [form, setForm] =
     useState<z.infer<typeof jobFormValidation>>(initialState);
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const target = e.target;
 
@@ -69,11 +79,69 @@ function PostJobForm() {
         setForm((prev) => ({ ...prev, [target.id]: target.files?.[0] }));
       } else if (target.type === "checkbox") {
         setForm((prev) => ({ ...prev, [target.id]: target.checked }));
+      } else if (target.type === "number") {
+        setForm((prev) => ({
+          ...prev,
+          [target.id]: target.value ? Number(target.value) : 0,
+        }));
+      } else if (target.type === "date") {
+        setForm((prev) => ({
+          ...prev,
+          [target.id]: target.value ? new Date(target.value) : new Date(),
+        }));
       } else {
         setForm((prev) => ({ ...prev, [target.id]: target.value }));
       }
     } else if (target instanceof HTMLSelectElement) {
       setForm((prev) => ({ ...prev, [target.id]: target.value }));
+    } else if (target instanceof HTMLTextAreaElement) {
+      setForm((prev) => ({ ...prev, [target.id]: target.value }));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    dispatch(setLoading({ loading: true }));
+    const id = toast.loading("Posting.....");
+    try {
+      const formData = new FormData();
+      const { companyLogo, ...rest } = form;
+      if (!companyLogo) return toast.error("Company logo is required", { id });
+      try {
+        jobFormValidation.parse({
+          companyLogo,
+          ...rest,
+          requiredSkills: skillsList,
+        });
+      } catch (error) {
+        if (error instanceof ZodError) {
+          console.error(error.issues[0].message);
+
+          toast.error(error.issues[0].message, { id });
+        }
+      }
+      formData.append("data", JSON.stringify(form));
+      formData.append("companyLogo", companyLogo);
+      skillsList.forEach((skill) => formData.append("requiredSkills", skill));
+
+      const res = await fetch("/api/post-job", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (!res.ok) toast.error(data.message, { id });
+      else {
+        toast.success(data.message, { id });
+        setForm(initialState);
+        setSkillsList([]);
+        setSkills("");
+        if (logoRef.current) logoRef.current.value = "";
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Internal Server Error", { id });
+    } finally {
+      dispatch(setLoading({ loading: false }));
     }
   };
 
@@ -92,7 +160,10 @@ function PostJobForm() {
           <CardDescription>Post new job to get Applicants</CardDescription>
         </CardHeader>
         <CardContent className="w-full max-w-4xl mx-auto">
-          <form className="grid grid-cols-1 md:grid-cols-2 lg:gap-x-8 gap-x-14  gap-y-5   w-full">
+          <form
+            onSubmit={handleSubmit}
+            className="grid grid-cols-1 md:grid-cols-2 lg:gap-x-8 gap-x-14 gap-y-5  w-full"
+          >
             {/* Company Name */}
             <div className="flex flex-col gap-2">
               <label htmlFor="companyName" className={labelClass}>
@@ -114,6 +185,7 @@ function PostJobForm() {
                 Company Logo
               </label>
               <input
+                ref={logoRef}
                 onChange={handleChange}
                 id="companyLogo"
                 type="file"
@@ -141,13 +213,12 @@ function PostJobForm() {
               <label htmlFor="description" className={labelClass}>
                 Job Description
               </label>
-              <input
+              <textarea
                 onChange={handleChange}
                 id="description"
                 placeholder="Job Description"
                 value={form.description}
-                type="text"
-                className={inputClass}
+                className={`${inputClass}  `}
               />
             </div>
 
@@ -193,7 +264,7 @@ function PostJobForm() {
               <select
                 onChange={handleChange}
                 className={` ${inputClass}`}
-                name="type"
+                name="experienceRequired"
                 id="experienceRequired"
               >
                 <option value="No">No</option>
@@ -216,7 +287,7 @@ function PostJobForm() {
             </div>
 
             {/* Education Required */}
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col black max-h-16 gap-2">
               <label htmlFor="educationRequired" className={labelClass}>
                 Education Required
               </label>
@@ -279,23 +350,38 @@ function PostJobForm() {
 
             {/* ------------------------Premium Post------------------------  */}
             <div className="flex gap-2 flex-col">
-              <label htmlFor="premiumPost" className={labelClass}>
+              <label htmlFor="isPremium" className={labelClass}>
                 Premium Post (paid)
               </label>
               <select
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                  const value = e.target.value;
+                  if (value === "Yes" && !isUserPaid) {
+                    customToast();
+                    setForm((prev) => ({ ...prev, isPremium: "No" }));
+                  } else {
+                    setForm((prev) => ({ ...prev, isPremium: "Yes" }));
+                  }
+                }}
                 className={` ${inputClass}`}
-                name="premiumPost"
-                id="experienceRequired"
+                name="isPremium"
+                id="isPremium"
+                value={form.isPremium}
               >
                 <option value="No">No</option>
                 <option value="Yes">Yes</option>
               </select>
             </div>
+            <div className="flex justify-center col-span-2 mt-6">
+              <Button
+                type="submit"
+                disabled={loading}
+                className="px-10 text-lg z-5 cursor-pointer"
+              >
+                Post
+              </Button>
+            </div>
           </form>
-
-          <div className="flex justify-center mt-6">
-            <Button className="px-10 text-lg z-5 cursor-pointer">Post</Button>
-          </div>
         </CardContent>
       </Card>
       <div className="sm:w-1/2 relative flex justify-center  items-center">

@@ -3,7 +3,7 @@ import LetterGlitch from "@/components/ui/letterglitch";
 import { useSearchParams } from "next/navigation";
 import { useState, useRef } from "react";
 import { Button } from "../ui/button";
-import { useGlobalContext } from "@/app/context/app-context";
+import { useGlobalContext } from "@/app/(shared-layout)/context/app-context";
 import { toast } from "sonner";
 import maskEmail from "@/utils/maskEmail";
 

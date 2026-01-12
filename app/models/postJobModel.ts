@@ -1,9 +1,10 @@
 import { JobForm } from "@/lib/validations/postJobFormSchema";
 import mongoose from "mongoose";
+type isPremium = "Yes" | "No";
 
 export interface jobPost extends mongoose.Document, JobForm {
   userId: mongoose.Types.ObjectId;
-  isPremium: boolean;
+  isPremium: isPremium;
 }
 
 const jobPostSchema = new mongoose.Schema<jobPost>({
@@ -20,12 +21,17 @@ const jobPostSchema = new mongoose.Schema<jobPost>({
   location: { type: String, required: true },
   requiredSkills: { type: [String], required: true },
   educationRequired: { type: String, required: true },
-  experienceRequired: { type: Boolean, required: true },
+  experienceRequired: { type: String, enum: ["Yes", "No"], required: true },
   minExperienceRequired: { type: Number },
   deadline: { type: Date, required: true },
-  isPremium: { type: Boolean, required: true, default: false },
+  isPremium: {
+    type: String,
+    enum: ["Yes", "No"],
+    required: true,
+    default: "No",
+  },
 });
 
 const jobPostModel =
-  mongoose.models.Jobs || mongoose.model<jobPost>("Job", jobPostSchema);
+  mongoose.models.Job|| mongoose.model<jobPost>("Job", jobPostSchema);
 export default jobPostModel;
