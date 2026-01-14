@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
   const pictureUrl = await uploadToCloudinary(
     buffer,
     "Companies Logo",
-    `${userId}_company_logo`,
+    `${userId}_company_logo_${Date.now()}`,
     "image"
   );
 
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
       companyName: data.companyName,
       companyLogo: pictureUrl,
       jobTitle: data.jobTitle,
-      description: data.jobTitle,
+      description: data.description,
       type: data.type,
       location: data.location,
       requiredSkills: requiredSkills,

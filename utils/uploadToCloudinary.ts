@@ -4,7 +4,7 @@ const uploadToCloudinary = async (
   buffer: Buffer,
   folder: string,
   filename: string,
-  resource_type: "image" | "video" = "image"
+  resource_type: "image" | "video" | "raw" = "image"
 ) => {
   return new Promise((res, rej) => {
     const stream = cloudinary.uploader.upload_stream(

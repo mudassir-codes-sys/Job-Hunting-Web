@@ -4,9 +4,9 @@ import { Button } from "../ui/button";
 function Navbar() {
   return (
     <>
-      <nav className="text-white sm:flex gap-4 hidden ">
+      <nav className="text-white sm:flex gap-4 hidden items-center justify-center ">
         <Link href="/">Home</Link>
-        <Link href="/">HOME</Link>
+        <Link href="/jobs">Jobs</Link>
         <Link href="/post-job">Post Job</Link>
         <Link href="/">HOME</Link>
       </nav>

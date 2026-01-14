@@ -1,5 +1,5 @@
 import { z } from "zod";
-type JobType = "Full Time" | "Part Time" | "Contract" | "Internship";
+export type JobType = "Full Time" | "Part Time" | "Contract" | "Internship";
 export type post = "Yes" | "No";
 
 export interface JobForm {

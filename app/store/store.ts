@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "../slices/userSlice";
-import loadingSlice from '../slices/loadingSlice'
+import loadingSlice from "../slices/loadingSlice";
+import jobSlice from "../slices/jobSlice";
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
-    loading:loadingSlice
+    loading: loadingSlice,
+    allJobs: jobSlice,
   },
 });
 

@@ -5,6 +5,8 @@ import { ShimmerButton } from "../ui/shimmer-button";
 import DisplayCards from "../ui/display-cards";
 import Lottie from "lottie-react";
 import jobAnimation from "../../public/Job.json";
+import { Suspense } from "react";
+import LoaderWrapper from "./LoaderWrapper";
 function HeroMain() {
   return (
     <main className="absolute md:mt-20 mt-16 text-white px-4 w-full flex md:flex-row flex-col">
@@ -33,7 +35,7 @@ function HeroMain() {
         {/* ----------------------------------------Buttons---------------------------------------------------- */}
         <div className="flex gap-3 pt-2 items-center z-10 relative">
           <Link href="#">
-            <ShimmerButton className="hover:bg-[#82DFFF]">
+            <ShimmerButton className=" transition-all duration-300 hover:bg-[#82DFFF]">
               Find Job
             </ShimmerButton>
           </Link>
@@ -50,7 +52,9 @@ function HeroMain() {
       <div className="md:w-1/2 w-full md:mt-0 mt-8  pr-6 place-items-center flex gap-10  flex-col ">
         <DisplayCards />
         {/* <div className="relative md:mt-12 lg:w-120 lg:h-80 w-70 h-70"> */}
-          <Lottie animationData={jobAnimation}  className="md:w-100 md:mt-6" />
+        <Suspense fallback={<LoaderWrapper />}>
+          <Lottie animationData={jobAnimation} className="md:w-100 md:mt-6" />
+        </Suspense>
         {/* </div> */}
       </div>
     </main>

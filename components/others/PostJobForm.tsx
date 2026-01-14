@@ -20,10 +20,10 @@ import { RootState } from "@/app/store/store";
 import customToast from "./CustomToast";
 import { setLoading } from "@/app/slices/loadingSlice";
 
-const labelClass =
+export const labelClass =
   "flex items-center gap-2 text-sm  leading-none font-semibold select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 max-w-xs text-gray-700 z-10 ";
 
-const inputClass =
+export const inputClass =
   "text-foreground placeholder:text-gray-600 selection:bg-primary selection:text-primary-foreground dark:bg-input/30 font-semibold border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-sm  transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm  focus:ring-1 focus:ring-gray-400 :ring-offset-1 focus:ring-offset-gray-100 lg:max-w-sm w-full shadow-xs shadow-[#1D353F] z-10";
 
 function PostJobForm() {
@@ -33,6 +33,7 @@ function PostJobForm() {
   const loading = useSelector((state: RootState) => state.loading.loading);
   const dispatch = useDispatch();
   const logoRef = useRef<HTMLInputElement | null>(null);
+  const dateRef  = useRef<HTMLInputElement | null>(null);
   const handleSkillsKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
@@ -48,7 +49,8 @@ function PostJobForm() {
   };
 
   const removeSkill = (id: number): void => {
-    setSkillsList((prev) => prev.filter((_, i) => i !== id));
+    setSkillsList((prev) =>
+       prev.filter((_, i) => i !== id));
   };
 
   const initialState: z.infer<typeof jobFormValidation> = {
@@ -136,6 +138,7 @@ function PostJobForm() {
         setSkillsList([]);
         setSkills("");
         if (logoRef.current) logoRef.current.value = "";
+        if(dateRef.current) dateRef.current.value=''
       }
     } catch (error) {
       console.error(error);
@@ -218,7 +221,7 @@ function PostJobForm() {
                 id="description"
                 placeholder="Job Description"
                 value={form.description}
-                className={`${inputClass}  `}
+                className={`${inputClass}`}
               />
             </div>
 
@@ -344,6 +347,7 @@ function PostJobForm() {
                 onChange={handleChange}
                 id="deadline"
                 type="date"
+                ref={dateRef}
                 className={`${inputClass} flex-1 min-w-30 outline-none bg-transparent `}
               />
             </div>
