@@ -42,12 +42,12 @@ function HeroMain() {
 
         {/* ----------------------------------------Buttons---------------------------------------------------- */}
         <div className="flex gap-3 pt-2 items-center z-10 relative">
-          <Link href="#">
+          <Link href="/jobs">
             <ShimmerButton className=" transition-all duration-300 hover:bg-[#82DFFF]">
               Find Job
             </ShimmerButton>
           </Link>
-          <Link href="#">
+          <Link href="/post-job">
             <Button className="bg-transparent border border-[#82DFFF] hover:bg-[#142b33b3]/70 cursor-pointer px-5 ">
               Post Job
             </Button>
