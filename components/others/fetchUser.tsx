@@ -1,5 +1,4 @@
 "use client";
-
 import { setUser } from "@/app/slices/userSlice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -10,10 +9,11 @@ export const fetchUser = async () => {
       credentials: "include",
     });
     const data = await res.json();
+    if (!data || !res.ok) return;
 
     return data;
   } catch (err) {
-    console.error(err);
+    console.error((err as Error).message);
   }
 };
 const FetchUser = () => {
@@ -24,7 +24,7 @@ const FetchUser = () => {
       try {
         const data = await fetchUser();
 
-        if (!data?.message) return;
+        if (!data || !data?.message) return;
 
         dispatch(
           setUser({

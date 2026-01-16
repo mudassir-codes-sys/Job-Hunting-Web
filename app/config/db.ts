@@ -20,7 +20,9 @@ const connectDB = async () => {
     connection.isConnected = db.connection.readyState === 1;
     console.log("DB connected");
   } catch (error) {
+    console.error((error as Error).message);
     console.log("Error to connect db");
+    process.exit(1);
   }
 };
 

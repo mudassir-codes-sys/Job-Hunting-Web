@@ -1,7 +1,7 @@
 "use client";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { setAllJobs } from "@/app/slices/jobSlice";
 import JobCard from "./JobCard";
 import { Button } from "../ui/button";
@@ -27,10 +27,12 @@ export default function PremiumJobs() {
     };
     fetchJobs();
   }, [dispatch]);
-  const premiumJobs = allJobs
-    .filter((job) => job.isPremium === "Yes")
-    .reverse()
-    .slice(0, 4);
+  const premiumJobs = useMemo(() => {
+    return (allJobs || [])
+      .filter((job) => job.isPremium === "Yes")
+      .reverse()
+      .slice(0, 4);
+  }, [allJobs]);
   return (
     <>
       <div className="w-full flex justify-center items-center pb-10 pt-24 flex-col">

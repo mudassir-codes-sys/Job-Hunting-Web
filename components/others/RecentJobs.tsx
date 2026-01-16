@@ -5,11 +5,15 @@ import JobCard from "./JobCard";
 import { Button } from "../ui/button";
 import { job as JobType } from "@/app/slices/jobSlice";
 import Link from "next/link";
+import { useMemo } from "react";
 
 export default function RecentPostedJobs() {
-  const allJobs: JobType[] = useSelector((state: RootState) =>
-    state.allJobs.allJobs.slice(0, 4).reverse()
+  const allJobsFromStore: JobType[] = useSelector(
+    (state: RootState) => state.allJobs.allJobs
   );
+  const allJobs = useMemo(() => {
+    return allJobsFromStore.slice(0, 4).reverse();
+  }, [allJobsFromStore]);
 
   return (
     <>

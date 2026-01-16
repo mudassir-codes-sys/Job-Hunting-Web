@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { setUser } from "@/app/slices/userSlice";
+import { clearUser } from "@/app/slices/userSlice";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -17,8 +17,8 @@ function Navbar() {
       const res = await fetch("/api/logout", { method: "POST" });
       const data = await res.json();
       if (res.ok) {
-        dispatch(setUser({ userEmail: "", isPaid: false }));
-        toast.success(data.message);
+        dispatch(clearUser());
+        toast.success(data.message || "An unexpected error occurred");
         router.push("/login");
       } else toast.error("An unexpected error occurred");
     } catch (error) {

@@ -13,6 +13,7 @@ export async function GET(req: NextRequest) {
   try {
     decode = jwt.verify(token, process.env.JWT!) as JwtPayload;
   } catch (err) {
+    console.error((err as Error).message);
     return sendResponse(false, "Invalid or expired token", 401);
   }
 
