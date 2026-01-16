@@ -5,7 +5,7 @@ import RecentPostedJobs from "./RecentJobs";
 function Hero() {
   return (
     <>
-      <div className="w-full h-screen relative ">
+      <div className="w-full h-screen max-h-auto  relative ">
         <Image
           src="/bg.jpg"
           alt="bg"

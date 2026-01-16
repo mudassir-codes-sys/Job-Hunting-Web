@@ -28,9 +28,14 @@ const JobsComp = () => {
   }, [dispatch]);
   return (
     <div className="mt-20 bg-[#22363D] min-h-screen w-full max-h-auto">
-      <div className="flex justify-center items-center gap-1">
-        <h1 className=" text-3xl py-10 text-white font-semibold">JOBS</h1>
-        <span className="w-12 h-0.5 bg-white"></span>
+      <div className="flex flex-col justify-center py-10 gap-2 items-center w-full">
+        <div className="flex justify-center items-center gap-1">
+          <h1 className=" text-3xl  text-white font-semibold">JOBS</h1>
+          <span className="w-12 h-0.5 bg-white"></span>
+        </div>
+        {showJobs.length === 0 && (
+          <p className="text-gray-300 text-sm">No jobs found</p>
+        )}
       </div>
       <div className="flex justify-end  px-10 mb-10">
         <select
@@ -46,9 +51,7 @@ const JobsComp = () => {
         </select>
       </div>
       <div className="grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4 ">
-        {showJobs.length === 0 ? (
-          <h1>No Job Found</h1>
-        ) : (
+        {showJobs.length > 0 &&
           showJobs.map((job) => (
             <JobCard
               _id={job._id}
@@ -69,8 +72,7 @@ const JobsComp = () => {
               key={job._id}
               minExperienceRequired={job.minExperienceRequired}
             />
-          ))
-        )}
+          ))}
       </div>
     </div>
   );

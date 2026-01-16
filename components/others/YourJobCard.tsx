@@ -2,12 +2,14 @@
 import { job as JobType } from "@/app/slices/jobSlice";
 import Image from "next/image";
 import Link from "next/link";
-import { FaLocationDot } from "react-icons/fa6";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { FaLocationDot } from "react-icons/fa6";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import ConfirmModal from "./ConfirmModal";
+import { toast } from "sonner";
 
-function JobCard({
+const YourJobCard = ({
   _id,
   companyName,
   companyLogo,
@@ -22,8 +24,30 @@ function JobCard({
   isPremium,
   applied,
   createdAt,
-}: JobType) {
+}: JobType) => {
   const [show, setShow] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const handleDelete = async () => {
+    const id = toast.loading("Loading.....");
+    try {
+      const res = await fetch("/api/delete-job", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: _id }),
+      });
+      const data = await res.json();
+      if (!res.ok)
+        return toast.error(
+          data.message ? data.message : "An unexpected error occurred",
+          { id }
+        );
+      toast.success(data.message, { id });
+      setModalOpen(false);
+    } catch (error) {
+      toast.error("Internal Server Error", { id });
+      console.error(error);
+    }
+  };
   return (
     <motion.div
       initial={{ y: 100, opacity: 0.5 }}
@@ -136,15 +160,32 @@ function JobCard({
           </div>
 
           {/* Apply Button */}
-          <Link href={`/apply/${_id}`} className="mt-auto">
-            <Button className="mt-3  w-full py-2 bg-[#4FC3F7] hover:bg-[#82dffd] cursor-pointer text-black/85 rounded transition-colors text-md font-semibold">
-              Apply
+          <div className="mt-auto">
+            <Link href={`/job/${_id}/applicants`}>
+              <Button className="mt-3  w-full py-2 bg-[#4FC3F7] hover:bg-[#82dffd] cursor-pointer text-black/85 rounded transition-colors text-md font-semibold">
+                View Applicants
+              </Button>
+            </Link>
+
+            <Button
+              onClick={() => setModalOpen(true)}
+              className="mt-3  w-full py-2 cursor-pointer rounded transition-colors text-md font-semibold"
+              variant="destructive"
+            >
+              Delete
             </Button>
-          </Link>
+
+            <ConfirmModal
+              isOpen={modalOpen}
+              onClose={() => setModalOpen(false)}
+              onConfirm={handleDelete}
+              message="Are you sure you want to delete this job?"
+            />
+          </div>
         </div>
       </div>
     </motion.div>
   );
-}
+};
 
-export default JobCard;
+export default YourJobCard;

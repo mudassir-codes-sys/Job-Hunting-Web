@@ -7,9 +7,9 @@ interface props extends emailProps {
 }
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function sendEmail({ name, email, code }: props): Promise<void> {
+export async function sendEmail({ name, code }: props): Promise<void> {
   try {
-    const { data, error } = await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: "Levels <onboarding@resend.dev>",
       to: "levelscure@gmail.com",
       subject: "Email Verification code",

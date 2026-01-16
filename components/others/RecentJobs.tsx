@@ -3,10 +3,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 import JobCard from "./JobCard";
 import { Button } from "../ui/button";
+import { job as JobType } from "@/app/slices/jobSlice";
 import Link from "next/link";
 
 export default function RecentPostedJobs() {
-  const allJobs = useSelector((state: RootState) =>
+  const allJobs: JobType[] = useSelector((state: RootState) =>
     state.allJobs.allJobs.slice(0, 4).reverse()
   );
 
@@ -16,7 +17,7 @@ export default function RecentPostedJobs() {
         <h1 className="text-2xl font-bold text-white pb-1">
           Recent Posted Jobs
         </h1>
-        <h2 className=" text-gray-400">
+        <h2 className=" text-gray-400 text-sm px-2">
           Explore Featured Premium Jobs – Handpicked for You
         </h2>
       </div>

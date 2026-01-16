@@ -5,11 +5,14 @@ import { useEffect } from "react";
 import { setAllJobs } from "@/app/slices/jobSlice";
 import JobCard from "./JobCard";
 import { Button } from "../ui/button";
+import { job as JobType } from "@/app/slices/jobSlice";
 import Link from "next/link";
 
 export default function PremiumJobs() {
   const dispatch = useDispatch();
-  const allJobs = useSelector((state: RootState) => state.allJobs.allJobs);
+  const allJobs: JobType[] = useSelector(
+    (state: RootState) => state.allJobs.allJobs
+  );
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -32,7 +35,7 @@ export default function PremiumJobs() {
     <>
       <div className="w-full flex justify-center items-center pb-10 pt-24 flex-col">
         <h1 className="text-2xl font-bold text-white pb-1">Premium Posts</h1>
-        <h2 className=" text-gray-400">
+        <h2 className=" text-gray-400 px-2 text-sm">
           Explore Featured Premium Jobs – Handpicked for You
         </h2>
       </div>

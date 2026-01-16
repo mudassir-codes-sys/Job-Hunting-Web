@@ -16,17 +16,11 @@ export default function PostJobLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={` antialiased`}>
-        <GlobalContextProvider>
-          <GoogleOAuthProvider
-            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
-          >
-            <Toaster richColors position="top-right" />
-            {children}
-          </GoogleOAuthProvider>
-        </GlobalContextProvider>
-      </body>
-    </html>
+    <GlobalContextProvider>
+      <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+        <Toaster richColors position="top-right" />
+        {children}
+      </GoogleOAuthProvider>
+    </GlobalContextProvider>
   );
 }

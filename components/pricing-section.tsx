@@ -93,19 +93,20 @@ export default function Pricing() {
   };
 
   return (
-    <Section>
-      <Container className="flex flex-col max-w-3xl mx-auto gap-4 text-center">
+    <Section className="w-full">
+      <Container className="flex flex-col max-w-3xl mx-auto gap-2 text-center">
         <h2 className=" text-white font-semibold text-3xl  mt-3">Pricing</h2>
-        <p className="text-lg  md:text-xl text-gray-300">
+        <p className="text-sm  md:text-md text-gray-300">
           Select the plan that best suits your needs.
         </p>
-
-        <div className="not-prose mt-4 flex justify-between gap-6 ">
+      </Container>
+      <div className="flex items-center max-w-3xl mx-auto  ">
+        <div className="not-prose mt-4 w-full flex justify-between ">
           {pricingData.map((plan) => (
             <PricingCard key={plan.title} plan={plan} onClick={handleClick} />
           ))}
         </div>
-      </Container>
+      </div>
     </Section>
   );
 }

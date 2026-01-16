@@ -111,6 +111,8 @@ export async function POST(req: NextRequest) {
 
     return sendResponse(false, "Invalid request type", 400);
   } catch (error: unknown) {
+    console.error((error as Error).message);
+
     if (error instanceof ZodError)
       return sendResponse(false, error.issues[0].message, 400);
     else return sendResponse(false, (error as Error).message, 500);

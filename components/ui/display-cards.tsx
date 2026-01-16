@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { Sparkles, Rocket, Users } from "lucide-react";
-
+import { motion } from "framer-motion";
 interface DisplayCardProps {
   className?: string;
   icon?: React.ReactNode;
@@ -85,10 +85,19 @@ export default function DisplayCards({ cards }: DisplayCardsProps) {
   const displayCards = cards || defaultCards;
 
   return (
-    <div className="grid [grid-template-areas:'stack'] place-items-center px-4 sm:px-10 md:px-20 gap-4 opacity-100 animate-in fade-in-0 duration-700">
+    <motion.div
+      initial={{ y: 20, opacity: 40 }}
+      whileInView={{ y: 0, opacity: 100 }}
+      transition={{
+        duration: 0.8,
+        ease: "easeOut",
+        delay: 0.1,
+      }}
+      className="grid [grid-template-areas:'stack'] place-items-center px-4 sm:px-10 md:px-20 gap-4 opacity-100 animate-in fade-in-0 duration-700"
+    >
       {displayCards.map((cardProps, index) => (
         <DisplayCard key={index} {...cardProps} />
       ))}
-    </div>
+    </motion.div>
   );
 }

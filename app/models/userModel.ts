@@ -9,7 +9,7 @@ export interface User extends mongoose.Document {
   isVerified: boolean;
   profilePicture?: string;
   isPaid: boolean;
-  premiumExpiryDate: Date | null;
+  premiumExpiryDate?: Date | null;
 }
 
 export const userSchema = new mongoose.Schema<User>(
@@ -23,7 +23,7 @@ export const userSchema = new mongoose.Schema<User>(
     profilePicture: { type: String, default: null },
     isVerified: { type: Boolean, required: true, default: false },
     isPaid: { type: Boolean, default: false },
-    premiumExpiryDate: { type: Date, required: true, default: null },
+    premiumExpiryDate: { type: Date, default: null },
   },
   { timestamps: true }
 );

@@ -6,6 +6,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import ClientOnly from "@/components/others/ClientOnly";
 import FetchUser from "@/components/others/fetchUser";
 
+
 export const metadata: Metadata = {
   title: "Home",
   description: "Home page of the web",

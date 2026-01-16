@@ -1,20 +1,57 @@
+"use client";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { setUser } from "@/app/slices/userSlice";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 function Navbar() {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const userEmail = useSelector((state: RootState) => state.user.userEmail);
+
+  const handleLogout = async () => {
+    try {
+      const res = await fetch("/api/logout", { method: "POST" });
+      const data = await res.json();
+      if (res.ok) {
+        dispatch(setUser({ userEmail: "", isPaid: false }));
+        toast.success(data.message);
+        router.push("/login");
+      } else toast.error("An unexpected error occurred");
+    } catch (error) {
+      console.error(error);
+
+      toast.error("Something went wrong");
+    }
+  };
+
   return (
     <>
       <nav className="text-white sm:flex gap-4 hidden items-center justify-center ">
         <Link href="/">Home</Link>
         <Link href="/jobs">Jobs</Link>
-        <Link href="/post-job">Post Job</Link>
-        <Link href="/">HOME</Link>
+        <Link href="/your-jobs">Your Jobs</Link>
+        <Link href="/pricing">Pricing</Link>
       </nav>
 
       <div className="hidden sm:flex items-center gap-4 ">
-        <Button className="bg-[#4FC3F7] hover:bg-[#82DFFF] cursor-pointer px-5 ">
-          Login
-        </Button>
+        {!userEmail ? (
+          <Link href="/login">
+            <Button className="bg-[#4FC3F7] hover:bg-[#82DFFF] cursor-pointer px-5 ">
+              Login
+            </Button>
+          </Link>
+        ) : (
+          <Button
+            onClick={handleLogout}
+            className="bg-[#4FC3F7] hover:bg-[#82DFFF] cursor-pointer px-5 "
+          >
+            Logout
+          </Button>
+        )}
         <svg
           className=""
           xmlns="http://www.w3.org/2000/svg"

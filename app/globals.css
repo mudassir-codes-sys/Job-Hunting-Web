@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Outfit:wght@100..900&display=swap");
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -66,6 +68,20 @@
   @keyframes shimmer-slide {
     to {
       transform: translate(calc(100cqw - 100%), 0);
+    }
+  }
+  --animate-meteor-effect: meteor 5s linear infinite;
+  @keyframes meteor {
+    0% {
+      transform: rotate(215deg) translateX(0);
+      opacity: 1;
+    }
+    70% {
+      opacity: 1;
+    }
+    100% {
+      transform: rotate(215deg) translateX(-500px);
+      opacity: 0;
     }
   }
 }
@@ -149,6 +165,22 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+}
+body,
+p,
+span,
+li {
+  font-family: "Outfit", sans-serif;
+  font-weight: 400;
+}
 
 .card_box {
   width: 200px;
@@ -156,7 +188,7 @@
   border-radius: 20px;
   position: relative;
   overflow: hidden;
-  background-color: #1B2D34;
+  background-color: #1b2d34;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 

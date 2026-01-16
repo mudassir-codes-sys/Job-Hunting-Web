@@ -7,7 +7,7 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardHeader,
+CardHeader,
   CardTitle,
 } from "../ui/card";
 import { useRef, useState } from "react";
@@ -33,7 +33,7 @@ function PostJobForm() {
   const loading = useSelector((state: RootState) => state.loading.loading);
   const dispatch = useDispatch();
   const logoRef = useRef<HTMLInputElement | null>(null);
-  const dateRef  = useRef<HTMLInputElement | null>(null);
+  const dateRef = useRef<HTMLInputElement | null>(null);
   const handleSkillsKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
@@ -49,8 +49,7 @@ function PostJobForm() {
   };
 
   const removeSkill = (id: number): void => {
-    setSkillsList((prev) =>
-       prev.filter((_, i) => i !== id));
+    setSkillsList((prev) => prev.filter((_, i) => i !== id));
   };
 
   const initialState: z.infer<typeof jobFormValidation> = {
@@ -138,7 +137,7 @@ function PostJobForm() {
         setSkillsList([]);
         setSkills("");
         if (logoRef.current) logoRef.current.value = "";
-        if(dateRef.current) dateRef.current.value=''
+        if (dateRef.current) dateRef.current.value = "";
       }
     } catch (error) {
       console.error(error);

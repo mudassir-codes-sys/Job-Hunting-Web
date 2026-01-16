@@ -5,6 +5,7 @@ import { GlobalContextProvider } from "./context/app-context";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Header from "@/components/others/Header";
 import ClientOnly from "@/components/others/ClientOnly";
+import Footer from "@/components/others/Footer";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -23,9 +24,11 @@ export default function RootLayout({
           clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
         >
           <Toaster richColors position="top-right" />
+
           <Header />
 
           {children}
+          <Footer />
         </GoogleOAuthProvider>
       </ClientOnly>
     </GlobalContextProvider>

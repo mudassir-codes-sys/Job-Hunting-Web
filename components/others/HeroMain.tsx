@@ -5,12 +5,20 @@ import { ShimmerButton } from "../ui/shimmer-button";
 import DisplayCards from "../ui/display-cards";
 import Lottie from "lottie-react";
 import jobAnimation from "../../public/Job.json";
-import { Suspense } from "react";
-import LoaderWrapper from "./LoaderWrapper";
+import { motion } from "framer-motion";
 function HeroMain() {
   return (
     <main className="absolute md:mt-20 mt-16 text-white px-4 w-full flex md:flex-row flex-col">
-      <div className="md:mt-14 mt-8 md:ml-20 flex flex-col justify-center md:items-start md:justify-start items-center  md:w-1/2 w-full ">
+      <motion.div
+        initial={{ y: 40, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        transition={{
+          duration: 0.8,
+          ease: "easeOut",
+          delay: 0.2,
+        }}
+        className="md:mt-14 mt-8 md:ml-20 flex flex-col justify-center md:items-start md:justify-start items-center  md:w-1/2 w-full "
+      >
         {/* ------------------------------------------------label---------------------------------------------------- */}
         <div className="bg-[#4fc3f7] p-1 rounded max-w-87.5 inline-block">
           <span className="bg-[#142b33b3]/70 px-2 py-1 rounded-2xl font-semibold">
@@ -45,16 +53,25 @@ function HeroMain() {
             </Button>
           </Link>
         </div>
-      </div>
+      </motion.div>
 
       {/* -----------------------------------------Right------------------------------------------------ */}
 
       <div className="md:w-1/2 w-full md:mt-0 mt-8  pr-6 place-items-center flex gap-10  flex-col ">
         <DisplayCards />
         {/* <div className="relative md:mt-12 lg:w-120 lg:h-80 w-70 h-70"> */}
-        <Suspense fallback={<LoaderWrapper />}>
+
+        <motion.div
+          initial={{ scale: 0.7, opacity: 20 }}
+          whileInView={{ scale: 1, opacity: 1000 }}
+          transition={{
+            duration: 0.8,
+            ease: "easeOut",
+          }}
+        >
           <Lottie animationData={jobAnimation} className="md:w-100 md:mt-6" />
-        </Suspense>
+        </motion.div>
+
         {/* </div> */}
       </div>
     </main>

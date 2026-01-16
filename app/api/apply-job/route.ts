@@ -27,6 +27,28 @@ export async function POST(req: NextRequest) {
     else return sendResponse(false, "An unexpected error occurred", 500);
   }
 
+  const allowedImageTypes = [
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/webp",
+  ];
+
+  if (resume && !allowedImageTypes.includes(resume.type)) {
+    return sendResponse(
+      false,
+      "Resume must be an image (jpg, jpeg, png, webp)",
+      400
+    );
+  }
+
+  if (coverLetter && !allowedImageTypes.includes(coverLetter.type)) {
+    return sendResponse(
+      false,
+      "Cover Letter must be an image (jpg, jpeg, png, webp)",
+      400
+    );
+  }
   try {
     await connectDB();
 
@@ -40,7 +62,7 @@ export async function POST(req: NextRequest) {
       resumeBuffer,
       "Resume",
       `${name}_resume_${Date.now()}`,
-      "raw"
+      "auto"
     );
 
     let coverLetterUrl;
@@ -51,7 +73,7 @@ export async function POST(req: NextRequest) {
         coverLetterBuffer,
         "cover_letter",
         `${name}_cover_letter_${Date.now()}`,
-        "raw"
+        "auto"
       );
     }
 
