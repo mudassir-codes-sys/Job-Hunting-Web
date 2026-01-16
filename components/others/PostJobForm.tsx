@@ -7,7 +7,7 @@ import {
   Card,
   CardContent,
   CardDescription,
-CardHeader,
+  CardHeader,
   CardTitle,
 } from "../ui/card";
 import { useRef, useState } from "react";
@@ -150,21 +150,15 @@ function PostJobForm() {
   return (
     <div className="w-full flex md:flex-row md:gap-0 gap-4 flex-col h-auto justify-between p-5">
       <Card className="md:w-1/2 w-full bg-white/90 backdrop-blur-lg h-auto  relative  shadow-lg  rounded-xl border border-gray-200">
-        {/* <div
-          className="inset-0 opacity-8 z-0"
-          style={{ width: "100%", height: "600px", position: "absolute" }}
-        >
-          <Galaxy />
-        </div> */}
         <div className="absolute inset-0 bg-black opacity-20"></div>
         <CardHeader className="w-full">
           <CardTitle className="text-2xl font-bold">Post New Job</CardTitle>
           <CardDescription>Post new job to get Applicants</CardDescription>
         </CardHeader>
-        <CardContent className="w-full max-w-4xl mx-auto">
+        <CardContent className="w-full max-w-7xl mx-auto">
           <form
             onSubmit={handleSubmit}
-            className="grid grid-cols-1 md:grid-cols-2 lg:gap-x-8 gap-x-14 gap-y-5  w-full"
+            className="md:grid  md:grid-cols-2 flex flex-col gap-4 sm:gap-6  w-full"
           >
             {/* Company Name */}
             <div className="flex flex-col gap-2">
