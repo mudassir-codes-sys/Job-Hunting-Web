@@ -4,9 +4,13 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setAllJobs } from "@/app/slices/jobSlice";
 import JobCard from "./JobCard";
+import { setLoading } from "@/app/slices/loadingSlice";
+import JobCardSkeleton from "./CardSkeleton";
 
 const JobsComp = () => {
   const dispatch = useDispatch();
+  const loading = useSelector((state: RootState) => state.loading.loading);
+
   const [filterJobs, setFilterJobs] = useState("All");
   const allJobs = useSelector((state: RootState) => state.allJobs.allJobs);
   let showJobs;
@@ -16,12 +20,15 @@ const JobsComp = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
+        dispatch(setLoading({ loading: true }));
         const res = await fetch("/api/getjobs", { method: "GET" });
         const data = await res.json();
         if (res.ok) dispatch(setAllJobs(data.jobs));
         else console.log(data.message || "Something went wrong");
       } catch (err) {
         console.error("Failed to fetch jobs:", err);
+      } finally {
+        dispatch(setLoading({ loading: false }));
       }
     };
     fetchJobs();
@@ -51,28 +58,29 @@ const JobsComp = () => {
         </select>
       </div>
       <div className="grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4 ">
-        {showJobs.length > 0 &&
-          showJobs.map((job) => (
-            <JobCard
-              _id={job._id}
-              companyName={job.companyName}
-              companyLogo={job.companyLogo}
-              applied={job.applied}
-              createdAt={job.createdAt}
-              deadline={job.deadline}
-              description={job.description}
-              educationRequired={job.educationRequired}
-              experienceRequired={job.experienceRequired}
-              isPremium={job.isPremium}
-              jobTitle={job.jobTitle}
-              location={job.location}
-              requiredSkills={job.requiredSkills}
-              type={job.type}
-              userId={job.userId}
-              key={job._id}
-              minExperienceRequired={job.minExperienceRequired}
-            />
-          ))}
+        {showJobs.length > 0 && loading
+          ? Array.from({ length: 4 }).map((_, i) => <JobCardSkeleton key={i} />)
+          : showJobs.map((job) => (
+              <JobCard
+                _id={job._id}
+                companyName={job.companyName}
+                companyLogo={job.companyLogo}
+                applied={job.applied}
+                createdAt={job.createdAt}
+                deadline={job.deadline}
+                description={job.description}
+                educationRequired={job.educationRequired}
+                experienceRequired={job.experienceRequired}
+                isPremium={job.isPremium}
+                jobTitle={job.jobTitle}
+                location={job.location}
+                requiredSkills={job.requiredSkills}
+                type={job.type}
+                userId={job.userId}
+                key={job._id}
+                minExperienceRequired={job.minExperienceRequired}
+              />
+            ))}
       </div>
     </div>
   );

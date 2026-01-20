@@ -7,22 +7,28 @@ import JobCard from "./JobCard";
 import { Button } from "../ui/button";
 import { job as JobType } from "@/app/slices/jobSlice";
 import Link from "next/link";
+import { setLoading } from "@/app/slices/loadingSlice";
+import JobCardSkeleton from "./CardSkeleton";
 
 export default function PremiumJobs() {
   const dispatch = useDispatch();
+  const loading = useSelector((state: RootState) => state.loading.loading);
   const allJobs: JobType[] = useSelector(
-    (state: RootState) => state.allJobs.allJobs
+    (state: RootState) => state.allJobs.allJobs,
   );
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
+        dispatch(setLoading({ loading: true }));
         const res = await fetch("/api/getjobs", { method: "GET" });
         const data = await res.json();
         if (res.ok) dispatch(setAllJobs(data.jobs));
         else console.log(data.message || "Something went wrong");
       } catch (err) {
         console.error("Failed to fetch jobs:", err);
+      } finally {
+        dispatch(setLoading({ loading: false }));
       }
     };
     fetchJobs();
@@ -51,27 +57,29 @@ export default function PremiumJobs() {
       </div>
 
       <div className="grid grid-cols-1 place-items-center sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4 ">
-        {premiumJobs.map((job) => (
-          <JobCard
-            _id={job._id}
-            companyName={job.companyName}
-            companyLogo={job.companyLogo}
-            applied={job.applied}
-            createdAt={job.createdAt}
-            deadline={job.deadline}
-            description={job.description}
-            educationRequired={job.educationRequired}
-            experienceRequired={job.experienceRequired}
-            isPremium={job.isPremium}
-            jobTitle={job.jobTitle}
-            location={job.location}
-            requiredSkills={job.requiredSkills}
-            type={job.type}
-            userId={job.userId}
-            key={job._id}
-            minExperienceRequired={job.minExperienceRequired}
-          />
-        ))}
+        {loading
+          ? Array.from({ length: 4 }).map((_, i) => <JobCardSkeleton key={i} />)
+          : premiumJobs.map((job) => (
+              <JobCard
+                _id={job._id}
+                companyName={job.companyName}
+                companyLogo={job.companyLogo}
+                applied={job.applied}
+                createdAt={job.createdAt}
+                deadline={job.deadline}
+                description={job.description}
+                educationRequired={job.educationRequired}
+                experienceRequired={job.experienceRequired}
+                isPremium={job.isPremium}
+                jobTitle={job.jobTitle}
+                location={job.location}
+                requiredSkills={job.requiredSkills}
+                type={job.type}
+                userId={job.userId}
+                key={job._id}
+                minExperienceRequired={job.minExperienceRequired}
+              />
+            ))}
       </div>
     </>
   );

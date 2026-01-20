@@ -9,7 +9,7 @@ import { useMemo } from "react";
 
 export default function RecentPostedJobs() {
   const allJobsFromStore: JobType[] = useSelector(
-    (state: RootState) => state.allJobs.allJobs
+    (state: RootState) => state.allJobs.allJobs,
   );
   const allJobs = useMemo(() => {
     return allJobsFromStore.slice(0, 4).reverse();
